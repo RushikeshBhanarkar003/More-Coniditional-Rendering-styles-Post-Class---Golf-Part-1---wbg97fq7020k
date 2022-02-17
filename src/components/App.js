@@ -1,42 +1,44 @@
-import React, { Component, useState } from "react";
-import '../styles/App.css';
+import React, { useEffect, useState } from "react";
+import "../styles/App.css";
 
-class App extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            renderBall: false,
-            posi : 0,
-            ballPosition: { left: "0px" }
-        };
-        this.renderChoice = this.renderBallOrButton.bind(this)
-        this.buttonClickHandler = this.buttonClickHandler.bind(this)
-    };
+const App = () => {
+  const [renderBall, setRenderBall] = useState(false);
+  const [posi, setPosi] = useState(0);
+//   const [ballPosition, setBallPosi] = useState({ left: 0 });
 
-    buttonClickHandler() {
-   
-   }
-    renderBallOrButton() {
-		if (this.state.renderBall) {
-		    return <div className="ball" style={this.state.ballPosition}></div>
-		} else {
-		    return <button onClick={this.buttonClickHandler} >Click For One Ball</button>
-		}
+  const buttonClickHandler = () => {
+    setRenderBall(true);
+  };
+
+  const eventHandler = (event) => {
+    switch (event.keyCode) {
+      case 39:
+        setPosi((posi) => posi + 5);
+        break;
+      default:
+        break;
     }
+  };
 
-    // bind ArrowRight keydown event
-    componentDidMount() {
-      
+  useEffect(() => {
+    document.addEventListener("keydown", eventHandler);
+  }, []);
+
+  const renderBallOrButton = () => {
+    if (renderBall) {
+      return (
+        <div
+          className="ball"
+          style={{
+            left: posi + "px",
+            position: "absolute",
+          }}
+        ></div>
+      );
     }
-
-    render() {
-        return (
-            <div className="playground">
-                {this.renderBallOrButton()}
-            </div>
-        )
-    }
-}
-
+    return <button onClick={buttonClickHandler}>Click For One Ball</button>;
+  };
+  return <div className="playground">{renderBallOrButton()}</div>;
+};
 
 export default App;
